@@ -78,6 +78,7 @@
         <textarea id="text" name="c" rows="20" cols="150" autofocus></textarea>
         <div id="buttons" class="center">
           <button id="clear">Clear</button>
+          <button id="Shorten">Shorten</button>
           <button id="submit">Paste</button>
           <input type="checkbox" id="private" name="p" /><span class="label">Private</span></input>
         </div>
@@ -162,6 +163,11 @@
         $("#paste").on("submit", function(e) {
           e.preventDefault();
           submitForm("/");
+        });
+
+        $("#shorten").on("submit", function(e) {
+          e.preventDefault();
+          submitForm("/u");
         });
       });
     </script>
