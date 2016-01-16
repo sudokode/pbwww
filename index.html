@@ -94,7 +94,7 @@
             c: $("#text").val()
           }
 
-          if ($("#private").attr("checked")) {
+          if ($("#private").prop("checked")) {
             data['p'] = 1;
           }
 
@@ -107,7 +107,7 @@
           $.ajax({
             url: "https://ptpb.pw/",
             type: "POST",
-            data: getData
+            data: getData()
           })
           .done(function(data) {
             var response = new Object;
