@@ -83,6 +83,10 @@
       margin-left: 0.5em;
     }
 
+    #filename {
+      margin-top: 0.5em;
+    }
+
     #pasteid,#uuid {
       margin-left: 2em;
     }
@@ -105,6 +109,8 @@
         <div id="paste_controls" class="center">
           <button id="clear" title="Clear form">Clear</button>
           <button id="shorten" title="Shorten URL">Shorten</button>
+          <input type="file" id="file" name="c" title="Upload a file" />
+          <button id="file_btn" title="Select file">File</button>
           <button id="submit" title="Paste text/file">Paste</button>
           <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
           <input type="number" id="expire" name="s" title="Expiration time in seconds" placeholder="Expires in..." /><label for="expire" class="label">seconds</label>
@@ -113,7 +119,8 @@
           <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
           <button id="update" title="Update paste">Update</button>
           <button id="delete" title="Delete paste">Delete</button>
-          <input type="file" id="file" name="c" title="Upload a file" />
+          <br >
+          <label id="filename" title="File to paste"></label>
         </div>
       </form>
     </div>
@@ -132,6 +139,8 @@
 
         $("button").addClass("btn btn-default");
 
+        $("#file").hide();
+
         $("#clear").click(function(e) {
           e.preventDefault();
 
@@ -139,6 +148,7 @@
           $("#private").prop("checked", false);
           $("#expire").val("");
           $("#file").val("");
+          $("#filename").text("");
           $("#pasteid").val("");
           $("#uuid").val("");
 
@@ -165,6 +175,7 @@
         function displayResponse(response) {
           $("#paste_error").hide();
           $("#paste_response").show();
+
           $("#response_url").attr("href", response.url);
           $("#response_url").text(response.url);
           $("#response_status").text(response.status);
@@ -179,6 +190,7 @@
         function displayError(text) {
           $("#paste_response").hide();
           $("#paste_error").show();
+
           $("#paste_error").text(text);
         }
 
@@ -265,6 +277,15 @@
         $("#delete").click(function(e) {
           e.preventDefault();
           deletePaste($("#uuid").val());
+        });
+
+        $("#file_btn").click(function(e) {
+          e.preventDefault();
+          $("#file").trigger("click");
+        });
+
+        $("#file").change(function(e) {
+          $("#filename").text($(this).val());
         });
       });
     </script>
