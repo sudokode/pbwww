@@ -89,23 +89,25 @@
           $("#text").val("");
         });
 
+        function getData() {
+          data = {
+            c: $("#text").val()
+          }
+
+          if ($("#private").attr("checked")) {
+            data['p'] = 1;
+          }
+
+          return data;
+        }
+
         $("#paste").on("submit", function(e) {
           e.preventDefault();
 
           $.ajax({
             url: "https://ptpb.pw/",
             type: "POST",
-            data: function() {
-              var data = {
-                c: $("#text").val()
-              }
-
-              if ($("#private").attr("checked") === true) {
-                data['p'] = 1;
-              }
-
-              return data;
-            }
+            data: getData
           })
           .done(function(data) {
             var response = new Object;
