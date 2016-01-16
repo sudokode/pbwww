@@ -35,16 +35,35 @@
 
     #paste {
       width:80%;
-      margin:auto;
+      margin: auto;
     }
 
-    #paste_response {
-      width: 50%;
+    #private {
+      margin-left: 2em;
+    }
+
+    .label {
+      font-size: 1em;
+      color: black;
+      font-weight: normal;
+    }
+
+    #expire {
+      min-width: 6em;
+      max-width: 7em;
+    }
+
+    #paste_response,#paste_error {
+      width: 20%;
       margin: auto;
     }
 
     #buttons {
-      margin-top:0.5em;
+      margin-top: 0.5em;
+    }
+
+    #buttons button {
+      margin-left: 0.5em;
     }
 
     #footer {
@@ -60,11 +79,15 @@
   </div>
 
     <div id="paste_form">
-      <form id="paste" action="https://ptpb.pw/" method="POST">
-        <textarea id="text" name="c" rows="20" cols="150" autofocus></textarea>
+      <form id="paste" action="https://ptpb.pw/" method="POST" enctype="multipart/form-data">
+        <textarea id="text" rows="20" cols="150" title="Text to paste" autofocus></textarea>
         <div id="buttons" class="center">
-          <button id="submit" name="submit">Paste</button>
-          <button id="clear">Clear</button>
+          <button id="clear" title="Clear form">Clear</button>
+          <button id="shorten" title="Shorten URL">Shorten</button>
+          <button id="submit" title="Paste text/file">Paste</button>
+          <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
+          <input type="number" id="expire" name="s" title="Expiration time in seconds" placeholder="Expires in..." /><label for="expire" class="label">seconds</label>
+          <input type="file" id="file" name="c" title="Upload a file" />
         </div>
       </form>
     </div>
@@ -75,25 +98,51 @@
       uuid: <span id="response_uuid"></span>
     </div>
 
+    <div id="paste_error" hidden="true"></div>
+
     <script type="text/javascript">
       $(document).ready(function() {
         $("#clear").click(function(e) {
           e.preventDefault();
           $("#text").val("");
+          $("#private").prop("checked", false);
+          $("#expire").val("");
+          $("#file").val("");
         });
 
-        $("#paste").on("submit", function(e) {
-          e.preventDefault();
+        function getData() {
+          data = {
+            c: $("#text").val()
+          }
 
-          $.ajax({
-            url: "https://ptpb.pw/",
-            type: "POST",
-            data: {
-              c: $("#text").val()
-            }
-          })
-          .done(function(data) {
-            var response = new Object;
+          if ($("#private").prop("checked")) {
+            data.p = 1;
+          }
+
+          if ($("#expire").val() > 0) {
+            data.s = $("#expire").val();
+          }
+
+          return data;
+        }
+
+        function displayResponse(response) {
+          $("#paste_error").hide();
+          $("#paste_response").show();
+          $("#response_url").attr("href", response.url);
+          $("#response_url").text(response.url);
+          $("#response_status").text(response.status);
+          $("#response_uuid").text(response.uuid);
+        }
+
+        function displayError(text) {
+          $("#paste_response").hide();
+          $("#paste_error").show();
+          $("#paste_error").text(text);
+        }
+
+        function parseResponse(data) {
+           var response = new Object;
 
             if (!data) {
               $("#paste_response").hide();
@@ -105,17 +154,36 @@
               response[property[0]] = property[1];
             });
 
-            console.log(response);
+            return response;
+        }
 
-            $("#paste_response").show();
-            $("#response_url").attr("href", response.url);
-            $("#response_url").text(response.url);
-            $("#response_status").text(response.status);
-            $("#response_uuid").text(response.uuid);
-          })
-          .fail(function() {
-            $("#paste_response").hide();
+        function submitForm(route) {
+          $.ajax({
+            url: "https://ptpb.pw" + route,
+            type: "POST",
+            data: getData(),
+            success: function(data) {
+              var response = parseResponse(data);
+              console.log(response);
+              displayResponse(response);
+            },
+            error: function(jqxhr) {
+              console.log(jqxhr);
+              displayError(jqxhr.responseText);
+            }
           });
+        }
+
+        $("#paste").submit(function(e) {
+          if (!$("#file").val()) {
+            e.preventDefault();
+            submitForm("/");
+          }
+        });
+
+        $("#shorten").click(function(e) {
+          e.preventDefault();
+          submitForm("/u");
         });
       });
     </script>
