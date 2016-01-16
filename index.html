@@ -78,7 +78,7 @@
         <textarea id="text" name="c" rows="20" cols="150" autofocus></textarea>
         <div id="buttons" class="center">
           <button id="clear">Clear</button>
-          <button id="submit" name="submit">Paste</button>
+          <button id="submit">Paste</button>
           <input type="checkbox" id="private" name="p" /><span class="label">Private</span></input>
         </div>
       </form>
@@ -111,16 +111,23 @@
           return data;
         }
 
-        $("#paste").on("submit", function(e) {
-          e.preventDefault();
+        function displayResponse(response) {
+          $("#paste_error").hide();
+          $("#paste_response").show();
+          $("#response_url").attr("href", response.url);
+          $("#response_url").text(response.url);
+          $("#response_status").text(response.status);
+          $("#response_uuid").text(response.uuid);
+        }
 
-          $.ajax({
-            url: "https://ptpb.pw/",
-            type: "POST",
-            data: getData()
-          })
-          .done(function(data) {
-            var response = new Object;
+        function displayError(text) {
+          $("#paste_response").hide();
+          $("#paste_error").show();
+          $("#paste_error").text(text);
+        }
+
+        function parseResponse(data) {
+           var response = new Object;
 
             if (!data) {
               $("#paste_response").hide();
@@ -132,21 +139,29 @@
               response[property[0]] = property[1];
             });
 
-            console.log(response);
+            return response;
+        }
 
-            $("#paste_error").hide();
-            $("#paste_response").show();
-            $("#response_url").attr("href", response.url);
-            $("#response_url").text(response.url);
-            $("#response_status").text(response.status);
-            $("#response_uuid").text(response.uuid);
-          })
-          .fail(function(jqxhr) {
-            $("#paste_response").hide();
-            $("#paste_error").show();
-            $("#paste_error").text(jqxhr.responseText);
-            console.log(jqxhr);
+        function submitForm(route) {
+          $.ajax({
+            url: "https://ptpb.pw" + route,
+            type: "POST",
+            data: getData(),
+            success: function(data) {
+              var response = parseResponse(data);
+              console.log(response);
+              displayResponse(response);
+            },
+            error: function(jqxhr) {
+              console.log(jqxhr);
+              displayError(jqxhr.responseText);
+            }
           });
+        }
+
+        $("#paste").on("submit", function(e) {
+          e.preventDefault();
+          submitForm("/");
         });
       });
     </script>
