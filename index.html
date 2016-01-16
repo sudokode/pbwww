@@ -14,19 +14,49 @@
     <link href="https://ptpb.pw/static/default.css" type="text/css" rel="stylesheet"/>
 
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+	<style>
+		#text {
+			border:none;
+			box-shadow:none;
+			outline:none;
+		}
+
+		#text {
+			background-color:#F8F8F8;
+			width:100%;
+			padding:0.5em;
+			font-family:monospace;
+		}
+
+		#paste {
+			width:80%;
+			margin:auto;
+		}
+
+		#heading,#buttons {
+			text-align:center;
+		}
+
+		#buttons {
+			margin-top:0.5em;
+		}
+
+	</style>
   </head>
   <body>
+	<div id="heading">
     <h1><a href="https://ptpb.pw/" target="_blank">ptpb.pw</a></h1>
     <p><h3>A website to paste shit</h3></p>
     <p>You're welcome</p>
-
-    <hr />
+	</div>
 
     <div id="paste_form">
       <form id="paste" action="https://ptpb.pw/" method="POST">
-        <textarea id="text" name="c" rows="20" cols="150"></textarea>
+        <textarea id="text" name="c" rows="20" cols="150" autofocus></textarea>
+		<div id="buttons">
         <button id="submit" name="submit">Paste</button>
         <button id="clear">Clear</button>
+		</div>
       </form>
     </div>
 
