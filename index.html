@@ -38,6 +38,10 @@
       margin:auto;
     }
 
+    #private {
+      margin-left: 1em;
+    }
+
     #paste_response {
       width: 50%;
       margin: auto;
@@ -65,6 +69,7 @@
         <div id="buttons" class="center">
           <button id="submit" name="submit">Paste</button>
           <button id="clear">Clear</button>
+          <input type="checkbox" id="private" name="p">Private</input>
         </div>
       </form>
     </div>
@@ -88,8 +93,16 @@
           $.ajax({
             url: "https://ptpb.pw/",
             type: "POST",
-            data: {
-              c: $("#text").val()
+            data: function() {
+              var data = {
+                c: $("#text").val()
+              }
+
+              if ($("#private").attr("checked") === true) {
+                data['p'] = 1;
+              }
+
+              return data;
             }
           })
           .done(function(data) {
