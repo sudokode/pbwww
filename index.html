@@ -79,14 +79,15 @@
   </div>
 
     <div id="paste_form">
-      <form id="paste" action="https://ptpb.pw/" method="POST">
-        <textarea id="text" name="c" rows="20" cols="150" autofocus></textarea>
+      <form id="paste" action="https://ptpb.pw/" method="POST" enctype="multipart/form-data">
+        <textarea id="text" rows="20" cols="150" autofocus></textarea>
         <div id="buttons" class="center">
           <button id="clear">Clear</button>
-          <button id="Shorten">Shorten</button>
+          <button id="shorten">Shorten</button>
           <button id="submit">Paste</button>
           <input type="checkbox" id="private" name="p" /><span class="label">Private</span></input>
           <input type="number" id="expire" name="s" placeholder="Expires in..." /><label for="expire" class="label">seconds</label>
+          <input type="file" id="file" name="c" />
         </div>
       </form>
     </div>
@@ -114,11 +115,11 @@
           }
 
           if ($("#private").prop("checked")) {
-            data['p'] = 1;
+            data.p = 1;
           }
 
           if ($("#expire").val() > 0) {
-            data['s'] = $("#expire").val();
+            data.s = $("#expire").val();
           }
 
           return data;
@@ -159,6 +160,7 @@
           $.ajax({
             url: "https://ptpb.pw" + route,
             type: "POST",
+            contentType: "multipart/form-data",
             data: getData(),
             success: function(data) {
               var response = parseResponse(data);
@@ -172,12 +174,14 @@
           });
         }
 
-        $("#paste").on("submit", function(e) {
-          e.preventDefault();
-          submitForm("/");
+        $("#paste").submit(function(e) {
+          if (!$("#file").val()) {
+            e.preventDefault();
+            submitForm("/");
+          }
         });
 
-        $("#shorten").on("submit", function(e) {
+        $("#shorten").click(function(e) {
           e.preventDefault();
           submitForm("/u");
         });
