@@ -48,6 +48,11 @@
       font-weight: normal;
     }
 
+    #expire {
+      min-width: 6em;
+      max-width: 7em;
+    }
+
     #paste_response,#paste_error {
       width: 50%;
       margin: auto;
@@ -81,6 +86,7 @@
           <button id="Shorten">Shorten</button>
           <button id="submit">Paste</button>
           <input type="checkbox" id="private" name="p" /><span class="label">Private</span></input>
+          <input type="number" id="expire" name="s" placeholder="Expires in..." /><label for="expire">seconds</label>
         </div>
       </form>
     </div>
@@ -107,6 +113,10 @@
 
           if ($("#private").prop("checked")) {
             data['p'] = 1;
+          }
+
+          if ($("#expire").val() > 0) {
+            data['s'] = $("#expire").val();
           }
 
           return data;
