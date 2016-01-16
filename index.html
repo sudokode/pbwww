@@ -54,7 +54,11 @@
     }
 
     #buttons {
-      margin-top:0.5em;
+      margin-top: 0.5em;
+    }
+
+    #buttons button {
+      margin-left: 0.5em;
     }
 
     #footer {
@@ -73,8 +77,8 @@
       <form id="paste" action="https://ptpb.pw/" method="POST">
         <textarea id="text" name="c" rows="20" cols="150" autofocus></textarea>
         <div id="buttons" class="center">
-          <button id="submit" name="submit">Paste</button>
           <button id="clear">Clear</button>
+          <button id="submit" name="submit">Paste</button>
           <input type="checkbox" id="private" name="p" /><span class="label">Private</span></input>
         </div>
       </form>
