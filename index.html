@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>pb - Web form by sudokode</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <link rel="icon" type="image/png" href="https://ptpb.pw/static/images/ptpb-32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="https://ptpb.pw/static/images/ptpb-128.png" sizes="128x128" />
+    <link rel="icon" type="image/png" href="https://ptpb.pw/static/images/ptpb-512.png" sizes="512x512" />
+
+    <link href="https://ptpb.pw/static/css/pbs.css" type="text/css" rel="stylesheet"/>
+    <link href="https://ptpb.pw/static/default.css" type="text/css" rel="stylesheet"/>
+
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+  </head>
+  <body>
+    <h1><a href="https://ptpb.pw/" target="_blank">ptpb.pw</a></h1>
+    <p><h3>A website to paste shit</h3></p>
+    <p>You're welcome</p>
+
+    <hr />
+
+    <div id="paste_form">
+      <form id="paste" action="https://ptpb.pw/" method="POST">
+        <textarea id="text" name="c" rows="20" cols="150"></textarea>
+        <button id="submit" name="submit">Paste</button>
+        <button id="clear">Clear</button>
+      </form>
+    </div>
+
+    <div id="paste_response" hidden="true">
+      url: <a id="response_url" target="_blank"></a><br />
+      status: <span id="response_status"></span><br />
+      uuid: <span id="response_uuid"></span>
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#clear").click(function(e) {
+          e.preventDefault();
+          $("#text").val("");
+        });
+
+        $("#paste").on("submit", function(e) {
+          e.preventDefault();
+
+          $.ajax({
+            url: "https://ptpb.pw/",
+            type: "POST",
+            data: {
+              c: $("#text").val()
+            }
+          })
+          .done(function(data) {
+            var response = new Object;
+
+            if (!data) {
+              $("#paste_response").hide();
+              return;
+            }
+
+            $.each(data.split("\n"), function(k,v) {
+              var property = v.split(": ");
+              response[property[0]] = property[1];
+            });
+
+            console.log(response);
+
+            $("#paste_response").show();
+            $("#response_url").attr("href", response.url);
+            $("#response_url").text(response.url);
+            $("#response_status").text(response.status);
+            $("#response_uuid").text(response.uuid);
+          })
+          .fail(function() {
+            $("#paste_response").hide();
+          });
+        });
+      });
+    </script>
+    <div style="margin-top: 5em; text-align: center">
+      <h6>Send all complaints to <a href="https://github.com/sudokode" target="_blank">sudokode</a></h6>
+    </div>
+  </body>
+</html>
