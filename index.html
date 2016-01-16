@@ -109,10 +109,13 @@
       $(document).ready(function() {
         $("#clear").click(function(e) {
           e.preventDefault();
+
           $("#text").val("");
           $("#private").prop("checked", false);
           $("#expire").val("");
           $("#file").val("");
+
+          $("#text").focus();
         });
 
         function getData() {
