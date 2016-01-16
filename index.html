@@ -180,29 +180,13 @@
           $("#paste_error").text(text);
         }
 
-        function parseResponse(data) {
-           var response = new Object;
-
-            if (!data) {
-              $("#paste_response").hide();
-              return;
-            }
-
-            $.each(data.split("\n"), function(k,v) {
-              var property = v.split(": ");
-              response[property[0]] = property[1];
-            });
-
-            return response;
-        }
-
         function submitForm(route) {
           $.ajax({
             url: "https://ptpb.pw" + route,
             method: "POST",
             data: getData(),
-            success: function(data) {
-              var response = parseResponse(data);
+            dataType: "json",
+            success: function(response) {
               console.log(response);
               displayResponse(response);
             },
@@ -229,8 +213,8 @@
             url: "https://ptpb.pw/" + uuid,
             method: "PUT",
             data: getData(),
-            success: function(data) {
-              var response = parseResponse(data);
+            dataType: "json",
+            success: function(response) {
               console.log(response);
               displayResponse(response);
             },
@@ -244,6 +228,7 @@
           $.ajax({
             url: "https://ptpb.pw/" + uuid,
             method: "DELETE",
+            dataType: "json",
             success: function(data) {
               $("#clear").trigger("click");
             },
