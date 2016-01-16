@@ -83,8 +83,8 @@
       margin-left: 0.5em;
     }
 
-    #uuid {
-      margin-left: 3em;
+    #pasteid,#uuid {
+      margin-left: 2em;
     }
 
     #footer {
@@ -108,9 +108,10 @@
           <button id="submit" title="Paste text/file">Paste</button>
           <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
           <input type="number" id="expire" name="s" title="Expiration time in seconds" placeholder="Expires in..." /><label for="expire" class="label">seconds</label>
-          <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
+          <input id="pasteid" title="Paste ID" placeholder="Enter a paste ID..." />
           <button id="load" title="Load paste">Load</button>
-          <button id="load" title="Update paste">Update</button>
+          <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
+          <button id="update" title="Update paste">Update</button>
           <button id="delete" title="Delete paste">Delete</button>
           <input type="file" id="file" name="c" title="Upload a file" />
         </div>
@@ -136,7 +137,8 @@
           $("#private").prop("checked", false);
           $("#expire").val("");
           $("#file").val("");
-          $("#uuid").text("");
+          $("#pasteid").val("");
+          $("#uuid").val("");
 
           $("#paste_response").hide();
           $("#text").focus();
@@ -165,7 +167,11 @@
           $("#response_url").text(response.url);
           $("#response_status").text(response.status);
           $("#response_uuid").text(response.uuid);
-          $("#uuid").text(response.uuid);
+          $("#pasteid").val(response.short);
+
+          if (response.uuid) {
+            $("#uuid").val(response.uuid);
+          }
         }
 
         function displayError(text) {
@@ -193,7 +199,7 @@
         function submitForm(route) {
           $.ajax({
             url: "https://ptpb.pw" + route,
-            type: "POST",
+            method: "POST",
             data: getData(),
             success: function(data) {
               var response = parseResponse(data);
@@ -201,7 +207,47 @@
               displayResponse(response);
             },
             error: function(jqxhr) {
-              console.log(jqxhr);
+              displayError(jqxhr.responseText);
+            }
+          });
+        }
+
+        function loadPaste(id) {
+          $.ajax({
+            url: "https://ptpb.pw/" + id,
+            success: function(data) {
+              $("#text").text(data);
+            },
+            fail: function(jqxhr) {
+              displayError(jqxhr.responseText);
+            }
+          });
+        }
+
+        function updatePaste(uuid) {
+          $.ajax({
+            url: "https://ptpb.pw/" + uuid,
+            method: "PUT",
+            data: getData(),
+            success: function(data) {
+              var response = parseResponse(data);
+              console.log(response);
+              displayResponse(response);
+            },
+            fail: function(jqxhr) {
+              displayError(jqxhr.responseText);
+            }
+          });
+        }
+
+        function deletePaste(uuid) {
+          $.ajax({
+            url: "https://ptpb.pw/" + uuid,
+            method: "DELETE",
+            success: function(data) {
+              $("#clear").trigger("click");
+            },
+            fail: function(jqxhr) {
               displayError(jqxhr.responseText);
             }
           });
@@ -217,6 +263,21 @@
         $("#shorten").click(function(e) {
           e.preventDefault();
           submitForm("/u");
+        });
+
+        $("#load").click(function(e) {
+          e.preventDefault();
+          loadPaste($("#pasteid").val());
+        });
+
+        $("#update").click(function(e) {
+          e.preventDefault();
+          updatePaste($("#uuid").val());
+        });
+
+        $("#delete").click(function(e) {
+          e.preventDefault();
+          deletePaste($("#uuid").val());
         });
       });
     </script>
