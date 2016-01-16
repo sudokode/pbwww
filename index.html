@@ -129,11 +129,11 @@
             $("#response_status").text(response.status);
             $("#response_uuid").text(response.uuid);
           })
-          .fail(function(data) {
+          .fail(function(jqxhr) {
             $("#paste_response").hide();
             $("#paste_error").show();
-            $("#paste_error").text(data.responseText);
-            console.log(data);
+            $("#paste_error").text(jqxhr.responseText);
+            console.log(jqxhr);
           });
         });
       });
