@@ -42,7 +42,7 @@
       margin-left: 1em;
     }
 
-    #paste_response {
+    #paste_response,#paste_error {
       width: 50%;
       margin: auto;
     }
@@ -79,6 +79,8 @@
       status: <span id="response_status"></span><br />
       uuid: <span id="response_uuid"></span>
     </div>
+
+    <div id="paste_error" hidden="true"></div>
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -120,14 +122,18 @@
 
             console.log(response);
 
+            $("#paste_error").hide();
             $("#paste_response").show();
             $("#response_url").attr("href", response.url);
             $("#response_url").text(response.url);
             $("#response_status").text(response.status);
             $("#response_uuid").text(response.uuid);
           })
-          .fail(function() {
+          .fail(function(data) {
             $("#paste_response").hide();
+            $("#paste_error").show();
+            $("#paste_error").text(data.responseText);
+            console.log(data);
           });
         });
       });
