@@ -107,6 +107,7 @@
           $("#text").val("");
           $("#private").prop("checked", false);
           $("#expire").val("");
+          $("#file").val("");
         });
 
         function getData() {
@@ -160,7 +161,6 @@
           $.ajax({
             url: "https://ptpb.pw" + route,
             type: "POST",
-            contentType: "multipart/form-data",
             data: getData(),
             success: function(data) {
               var response = parseResponse(data);
