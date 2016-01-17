@@ -192,7 +192,15 @@
           $("#response_url").text(response.url);
           $("#response_status").text(response.status);
           $("#response_uuid").text(response.uuid);
-          $("#pasteid").val(response.short);
+
+          var id = $("#pasteid");
+          if (response.label) {
+            id.val(response.label);
+          } else if (response.short) {
+            id.val(response.short);
+          } else {
+            id.val(response.long);
+          }
 
           if (response.uuid) {
             $("#uuid").val(response.uuid);
