@@ -60,7 +60,6 @@ $(document).ready(function() {
   }
 
   function displayError(text) {
-    //text = text.split(":");
     // if you wanted to print out many errors, the JSON would need to be parsed, and stuff
     /*  EXAMPLE:
      listOfErrorsHTML = Object.keys(jsonOfErrors).map(function (key) {
@@ -73,11 +72,8 @@ $(document).ready(function() {
     $("#paste_error").show();
 
     // $("#paste_error").text(text);
-    
-    $("#paste_error").append("<ul class=\"errorList\">");
-    // $(".errorList").text("ERRORS: ");
-    $(".errorList").append("<li>" + text + "</li>");
-    $(".errorList").append("</ul>");
+
+    $("#error_list").append("<li>" + text + "</li>");
     // makes the error message stand out a bit 
     $("#paste_error").addClass("alert alert-danger");
   }
