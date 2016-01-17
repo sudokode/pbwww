@@ -284,6 +284,8 @@
         }
 
         $("#paste").submit(function(e) {
+          var vanity = $("#vanity").val();
+
           if (!$("#file").val()) {
             e.preventDefault();
 
@@ -292,15 +294,16 @@
               return;
             }
 
-            var vanity = $("#vanity").val();
-
             if (vanity) {
-              $("#vanity").val("");
               submitForm("/~" + vanity);
             } else {
               submitForm("/");
             }
+          } else if (vanity) {
+              $("#paste").attr("action", "https://ptpb.pw/~" + vanity);
           }
+
+          $("#vanity").val("");
         });
 
         $("#shorten").click(function(e) {
