@@ -64,9 +64,11 @@
       background-color: white;
     }
 
-    #paste_response,#paste_error {
-      width: 20%;
-      margin: auto;
+    #paste_response, #paste_error {
+      position: absolute;
+      margin-left: 400px;
+      margin-top: 1em;
+      margin-right: 0.1em;
     }
 
     textarea {
@@ -79,6 +81,7 @@
 
     .paste_controls {
       margin-top: 0.5em;
+      float: left;
     }
 
     #clear {
@@ -119,6 +122,12 @@
     </form>
         <div class="paste_controls">
           <label id="filename" title="File to paste"></label>
+          <div id="paste_response" hidden="true">
+            url: <a id="response_url" target="_blank"></a><br />
+            status: <span id="response_status"></span><br />
+            uuid: <span id="response_uuid"></span>
+          </div>
+          <div id="paste_error" hidden="true"></div>
           <div class="paste_controls">
             <input id="pasteid" title="ID of current paste" placeholder="Enter a paste ID..." />
             <button id="load" title="Load paste">Load</button>
@@ -131,14 +140,6 @@
         </div>
       </div>
     </div>
-
-    <div id="paste_response" hidden="true">
-      url: <a id="response_url" target="_blank"></a><br />
-      status: <span id="response_status"></span><br />
-      uuid: <span id="response_uuid"></span>
-    </div>
-
-    <div id="paste_error" hidden="true"></div>
 
     <script type="text/javascript">
       $(document).ready(function() {
