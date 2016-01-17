@@ -203,21 +203,20 @@
          }
        }
 
+       // text -> JSON -> html
+       function jsonTextToHtmlList (text) {
+         var json = JSON.parse(text);
+         return Object.keys(json).map(function (key) {
+           return "<li>" + key + " : " + json[key] + "</li>"
+         }).join("");
+       }
+
        function displayError(text) {
-         // if you wanted to print out many errors, the JSON would need to be parsed, and stuff
-         /*  EXAMPLE:
-            listOfErrorsHTML = Object.keys(jsonOfErrors).map(function (key) {
-            return "<li>" + key + " : " + jsonOfErrors[key] + "</li>"
-            }).join(""); 
-            $(".errorList").append(listOfErrorsHTML);
-            // or something like that
-          */
+         $("#error_list").html(jsonTextToHtmlList(text));
+
          $("#paste_response").hide();
          $("#paste_error").show();
 
-         // $("#paste_error").text(text);
-
-         $("#error_list").append("<li>" + text + "</li>");
          // makes the error message stand out a bit 
          $("#paste_error").addClass("alert alert-danger");
        }
