@@ -131,6 +131,7 @@
           <div class="paste_controls">
             <input id="pasteid" title="ID of current paste" placeholder="Enter a paste ID..." />
             <button id="load" title="Load paste">Load</button>
+            <button id="source" title="Load source">Source</button>
             <div class="paste_controls">
               <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
               <button id="update" title="Update paste">Update</button>
@@ -159,6 +160,7 @@
           $("#expire").val("");
           $("#file").val("");
           $("#filename").text("");
+          $("#vanity").val("");
           $("#pasteid").val("");
           $("#uuid").val("");
 
@@ -166,9 +168,13 @@
           $("#text").focus();
         });
 
-        function getData() {
+        function getData(update) {
           data = {
             c: $("#text").val()
+          }
+
+          if (update) {
+            return data;
           }
 
           if ($("#private").prop("checked")) {
@@ -247,7 +253,7 @@
           $.ajax({
             url: "https://ptpb.pw/" + uuid,
             method: "PUT",
-            data: getData(),
+            data: getData(true),
             dataType: "json",
             success: function(response) {
               console.log(response);
@@ -300,6 +306,13 @@
         $("#load").click(function(e) {
           e.preventDefault();
           loadPaste($("#pasteid").val());
+        });
+
+        $("#source").click(function(e) {
+          e.preventDefault();
+          var id = $("#pasteid");
+          id.val("~index");
+          loadPaste(id.val());
         });
 
         $("#update").click(function(e) {
