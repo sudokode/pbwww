@@ -115,21 +115,21 @@
           <input type="file" id="file" name="c" title="Upload a file" />
           <button id="file_btn" title="Select file">File</button>
           <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
-          <input type="number" id="expire" name="s" title="Expiration time in seconds" placeholder="Expires in..." /><label for="expire" class="label">seconds</label>
+          <input type="number" min="0" id="expire" name="s" title="Expiration time in seconds" placeholder="Expires in..." /><label for="expire" id="hours" class="label">hours</label>
+      </form>
         <div class="paste_controls">
           <label id="filename" title="File to paste"></label>
         <div class="paste_controls">
-          <input id="pasteid" title="ID of current paste" placeholder="Enter a paste ID..." />
-          <button id="load" title="Load paste">Load</button>
+            <input id="pasteid" title="ID of current paste" placeholder="Enter a paste ID..." />
+            <button id="load" title="Load paste">Load</button>
         <div class="paste_controls">
-          <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
-          <button id="update" title="Update paste">Update</button>
-          <button id="delete" title="Delete paste">Delete</button>
+            <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
+            <button id="update" title="Update paste">Update</button>
+            <button id="delete" title="Delete paste">Delete</button>
         </div>
         </div>
         </div>
         </div>
-      </form>
     </div>
 
     <div id="paste_response" hidden="true">
@@ -173,7 +173,7 @@
           }
 
           if ($("#expire").val() > 0) {
-            data.s = $("#expire").val();
+            data.s = $("#expire").val() * 3600;
           }
 
           return data;
@@ -202,6 +202,9 @@
         }
 
         function submitForm(route) {
+          if (!route) {
+            return;
+          }
           $.ajax({
             url: "https://ptpb.pw" + route,
             method: "POST",
@@ -218,10 +221,14 @@
         }
 
         function loadPaste(id) {
+          if (!id) {
+            return;
+          }
+
           $.ajax({
             url: "https://ptpb.pw/" + id,
             success: function(data) {
-              $("#text").text(data);
+              $("#text").val(data);
             },
             fail: function(jqxhr) {
               displayError(jqxhr.responseText);
@@ -230,6 +237,10 @@
         }
 
         function updatePaste(uuid) {
+          if (!uuid) {
+            return;
+          }
+
           $.ajax({
             url: "https://ptpb.pw/" + uuid,
             method: "PUT",
@@ -262,8 +273,16 @@
         $("#paste").submit(function(e) {
           if (!$("#file").val()) {
             e.preventDefault();
+
+            if (!$("#text").val()) {
+              alert("Enter text or select a file to paste!");
+              return;
+            }
+
             submitForm("/");
           }
+
+          $("#expire").val($("#expire").val() * 3600);
         });
 
         $("#shorten").click(function(e) {
@@ -293,6 +312,55 @@
 
         $("#file").change(function(e) {
           $("#filename").text($(this).val());
+        });
+
+        $("#expire,#private").keypress(function(e) {
+          var code = e.keyCode || e.which;
+
+          if (code == 13) {
+            e.preventDefault();
+          }
+        });
+
+        $("#pasteid").keypress(function(e) {
+          var code = e.keyCode || e.which;
+
+          if (code == 13) {
+            e.preventDefault();
+
+            if ($(this).val()) {
+              loadPaste($(this).val());
+            } else {
+              alert("No ID!");
+            }
+          }
+        });
+
+        $("#uuid").keypress(function(e) {
+          var code = e.keyCode || e.which;
+
+          if (code == 13) {
+            e.preventDefault();
+
+            if ($(this).val()) {
+              updatePaste($(this).val());
+            } else {
+              alert("No UUID!");
+            }
+          }
+        });
+
+        $("#expire").on("input", function(e) {
+          var v = $(this).val();
+
+          if (v == 1) {
+            $("#hours").text("hour");
+          } else if (v == 0) {
+            $(this).val("");
+            $("#hours").text("hours");
+          } else {
+            $("#hours").text("hours");
+          }
         });
       });
     </script>
