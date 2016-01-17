@@ -117,6 +117,7 @@
         <button id="shorten" title="Shorten URL">Shorten</button>
         <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
         <input type="number" min="0" id="expire" name="s" title="Expiration time in hours" placeholder="Expires in..." /><label for="expire" id="hours" class="label">hours</label>
+        <input id="vanity" pattern="[^/\.]+" placeholder="Custom URL..." title="Custom URL (no slashes or dots)" />
         <button id="clear" title="Clear form">Clear</button>
     </form>
         <div class="paste_controls">
@@ -281,7 +282,13 @@
               return;
             }
 
-            submitForm("/");
+            var vanity = $("#vanity").val();
+
+            if (vanity) {
+              submitForm("/~" + vanity);
+            } else {
+              submitForm("/");
+            }
           }
         });
 
