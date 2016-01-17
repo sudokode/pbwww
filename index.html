@@ -276,6 +276,7 @@
             dataType: "json",
             success: function(data) {
               $("#clear").trigger("click");
+              displayResponse(data);
             },
             fail: function(jqxhr) {
               displayError(jqxhr.responseText);
