@@ -5,6 +5,12 @@ $(document).ready(function() {
 
   $("button").addClass("btn btn-default");
 
+  // button colors
+  $("button#delete").addClass("btn-danger");
+  $("button#submit").addClass("btn-primary");
+  $("button#clear").addClass("btn-danger");
+
+
   $("#file").hide();
 
   $("#clear").click(function(e) {
@@ -58,6 +64,8 @@ $(document).ready(function() {
     $("#paste_error").show();
 
     $("#paste_error").text(text);
+    // makes the error message stand out a bit 
+    $("#paste_error").addClass("alert alert-danger");
   }
 
   function submitForm(route) {
