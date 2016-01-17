@@ -291,6 +291,7 @@
             var vanity = $("#vanity").val();
 
             if (vanity) {
+              $("#vanity").val("");
               submitForm("/~" + vanity);
             } else {
               submitForm("/");
