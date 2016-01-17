@@ -1,0 +1,81 @@
+.center {
+    text-align: center;
+}
+
+#heading {
+    margin-bottom: 3em;
+}
+
+#text {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    width: 100%;
+    padding: 0.5em;
+    font-family: monospace;
+}
+
+#text:focus {
+    box-sizing: border-box;
+    outline: 1px solid #337AB7;
+}
+
+#paste {
+    width: 80%;
+    margin: auto;
+}
+
+#private {
+    margin-left: 2em;
+}
+
+.label {
+    font-size: 1em;
+    color: black;
+    font-weight: normal;
+}
+
+#filename {
+    font-weight: normal;
+    font-size: 1em;
+    font-style: italic;
+}
+
+#expire {
+    min-width: 6em;
+    max-width: 7em;
+    background-color: white;
+}
+
+#paste_response,#paste_error {
+    width: 20%;
+    margin: auto;
+}
+
+textarea {
+    background-color: #F8F8F8;
+}
+
+input {
+    background-color: white;
+}
+
+.paste_controls {
+    margin-top: 0.5em;
+}
+
+#clear {
+    float: right;
+}
+
+.paste_controls button:not(:first-child) {
+    margin-left: 0.5em;
+}
+
+#filename {
+    margin-top: 0.5em;
+}
+
+#footer {
+    margin-top: 3em;
+}
