@@ -75,20 +75,16 @@
       background-color: lightgrey;
     }
 
-    #paste_controls {
+    .paste_controls {
       margin-top: 0.5em;
     }
 
-    #paste_controls button {
+    .paste_controls button:not(:first-child) {
       margin-left: 0.5em;
     }
 
     #filename {
       margin-top: 0.5em;
-    }
-
-    #pasteid,#uuid {
-      margin-left: 2em;
     }
 
     #footer {
@@ -106,21 +102,27 @@
     <div id="paste_form">
       <form id="paste" action="https://ptpb.pw/" method="POST" enctype="multipart/form-data">
         <textarea id="text" rows="20" cols="150" title="Text to paste" autofocus></textarea>
-        <div id="paste_controls" class="center">
+        <div class="paste_controls">
+          <button id="submit" title="Paste text/file">Paste</button>
           <button id="clear" title="Clear form">Clear</button>
           <button id="shorten" title="Shorten URL">Shorten</button>
           <input type="file" id="file" name="c" title="Upload a file" />
           <button id="file_btn" title="Select file">File</button>
-          <button id="submit" title="Paste text/file">Paste</button>
           <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
           <input type="number" id="expire" name="s" title="Expiration time in seconds" placeholder="Expires in..." /><label for="expire" class="label">seconds</label>
+        <div class="paste_controls">
+        <div class="paste_controls">
           <input id="pasteid" title="ID of current paste" placeholder="Enter a paste ID..." />
           <button id="load" title="Load paste">Load</button>
+        <div class="paste_controls">
           <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
           <button id="update" title="Update paste">Update</button>
           <button id="delete" title="Delete paste">Delete</button>
           <br >
           <label id="filename" title="File to paste"></label>
+        </div>
+        </div>
+        </div>
         </div>
       </form>
     </div>
