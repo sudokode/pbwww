@@ -10,391 +10,124 @@
     <link rel="icon" type="image/png" href="https://ptpb.pw/static/images/ptpb-128.png" sizes="128x128" />
     <link rel="icon" type="image/png" href="https://ptpb.pw/static/images/ptpb-512.png" sizes="512x512" />
 
-    <link href="https://ptpb.pw/static/css/pbs.css" type="text/css" rel="stylesheet"/>
-    <link href="https://ptpb.pw/static/default.css" type="text/css" rel="stylesheet"/>
+    <link href="//ptpb.pw/static/css/pbs.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-    <style>
-      .center {
-        text-align: center;
-      }
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-      #heading {
-        margin-bottom: 3em;
-      }
-
-      #text {
-        border: none;
-        box-shadow: none;
-        outline: none;
-        width: 100%;
-        padding: 0.5em;
-        font-family: monospace;
-      }
-
-      #text:focus {
-        box-sizing: border-box;
-        outline: 1px solid #337AB7;
-      }
-
-      #paste {
-        width: 80%;
-        margin: auto;
-      }
-
-      #private {
-        margin-left: 2em;
-      }
-
-      .label {
-        font-size: 1em;
-        color: black;
-        font-weight: normal;
-      }
-
-      #filename {
-        font-weight: normal;
-        font-size: 1em;
-        font-style: italic;
-      }
-
-      #expire {
-        min-width: 6em;
-        max-width: 7em;
-        background-color: white;
-      }
-
-      #paste_response, #paste_error {
-        position: absolute;
-        margin-left: 400px;
-        margin-top: 1em;
-        margin-right: 0.1em;
-      }
-
-      textarea {
-        background-color: #F8F8F8;
-      }
-
-      input {
-        background-color: white;
-      }
-
-      .paste_controls {
-        margin-top: 0.5em;
-      }
-
-      #clear {
-        float: right;
-      }
-
-      .paste_controls button:not(:first-child) {
-        margin-left: 0.5em;
-      }
-
-      #filename {
-        margin-top: 0.5em;
-      }
-
-      #footer {
-        margin-top: 3em;
-      }
-    </style>
+    <script src="//ptpb.pw/~index.js"></script>
   </head>
   <body>
-  <div id="heading" class="center">
-    <h1><a href="https://ptpb.pw/" target="_blank">ptpb.pw</a></h1>
-    <h3>A website to paste shit</h3>
-    <h5>You're welcome</h5>
-  </div>
-
-  <div id="paste_form">
-    <form id="paste" action="https://ptpb.pw/" method="POST" enctype="multipart/form-data">
-      <textarea id="text" rows="20" cols="150" title="Text to paste" autofocus></textarea>
-      <div class="paste_controls">
-        <button id="submit" title="Paste text/file">Paste</button>
-        <input type="file" id="file" name="c" />
-        <button id="file_btn" title="Select file">Upload File</button>
-        <button id="shorten" title="Shorten URL">Shorten</button>
-        <input type="checkbox" id="private" name="p" title="Make paste private" /><span class="label">Private</span></input>
-        <input type="number" min="0" id="expire" name="s" title="Expiration time in hours" placeholder="Expires in..." /><label for="expire" id="hours" class="label">hours</label>
-        <input id="vanity" pattern="[^/\.]+" placeholder="Custom URL..." title="Custom URL (no slashes or dots)" />
-        <button id="clear" title="Clear form">Clear</button>
-    </form>
-        <div class="paste_controls">
-          <label id="filename" title="File to paste"></label>
-          <div id="paste_response" hidden="true">
-            url: <a id="response_url" target="_blank"></a><br />
-            status: <span id="response_status"></span><br />
-            uuid: <span id="response_uuid"></span>
-          </div>
-          <div id="paste_error" hidden="true"></div>
-          <div class="paste_controls">
-            <input id="pasteid" title="ID of current paste" placeholder="Enter a paste ID..." />
-            <button id="load" title="Load paste">Load</button>
-            <button id="source" title="Load source">Source</button>
-            <div class="paste_controls">
-              <input id="uuid" title="UUID of current paste" placeholder="Enter a paste UUID..." />
-              <button id="update" title="Update paste">Update</button>
-              <button id="delete" title="Delete paste">Delete</button>
-            </div>
-          </div>
-        </div>
+    <div id="stash" class="hidden" aria-hidden="true">
+      <div class="alert alert-info fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
       </div>
     </div>
 
-    <script type="text/javascript">
-      $(document).ready(function() {
-        document.title = "pb";
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="text-center">
+            <h1 class="page-header"><a href="https://ptpb.pw/" target="_blank">ptpb.pw</a></h1>
+            <h3>A website to paste shit</h3>
+            <p class="lead small">You're welcome</p>
+          </div>
+        </div>
 
-        $("a").attr("title", "Opens in a new tab");
+        <form id="paste-form">
+          <div id="alert-col" class="col-sm-12">
 
-        $("button").addClass("btn btn-default");
+          </div>
+          <div class="col-sm-12 form-group">
+            <textarea id="content" class="form-control" rows="20" cols="150" autofocus></textarea>
+            <div id="filename" class="hidden well text-center"><h4></h4></div>
+          </div>
 
-        $("#file").hide();
+          <div class="col-xs-6 col-sm-6 form-inline form-group">
+            <div class="form-group">
+              <button id="paste" type="submit" class="btn btn-primary btn-block ">
+                Paste
+                <span class="fa fa-spin fa-spinner hidden"></span>
+              </button>
+            </div>
+            <div class="form-group">
+              <input type="file" id="file-input" class="sr-only">
+              <button id="file" type="submit" class="btn btn-default btn-block">
+                Upload File
+                <span class="fa fa-spin fa-spinner hidden"></span>
+              </button>
+            </div>
+            <div class="form-group">
+              <button id="shorturl" type="submit" class="btn btn-default btn-block">
+                Short URL
+                <span class="fa fa-spin fa-spinner hidden"></span>
+              </button>
+            </div>
+          </div>
 
-        $("#clear").click(function(e) {
-          e.preventDefault();
+          <div class="col-xs-6 col-sm-6 form-inline form-group text-right">
+            <div class="form-group">
+              <div class="btn-group btn-block" data-toggle="buttons">
+                <label class="btn btn-default btn-block">
+                  <input id="private" class="api-input" type="checkbox"> Private
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <button id="clear" type="input" class="btn btn-default btn-block">Clear</button>
+            </div>
+          </div>
 
-          $("#text").val("");
-          $("#private").prop("checked", false);
-          $("#expire").val("");
-          $("#file").val("");
-          $("#filename").text("");
-          $("#vanity").val("");
-          $("#pasteid").val("");
-          $("#uuid").val("");
+          <div class="col-xs-6 col-sm-6 col-sm-push-6 form-group">
+            <div class="form-group">
+              <label for="sunset" class="sr-only">Expires</label>
+              <input type="text" id="sunset" class="form-control api-input" placeholder="Expires">
+            </div>
+            <div class="form-group">
+              <label for="label" class="sr-only">Label</label>
+              <input type="text" id="label" class="form-control" placeholder="Label">
+            </div>
+          </div>
 
-          $("#paste_response").hide();
-          $("#text").focus();
-        });
+          <div class="col-xs-12 col-sm-6 col-sm-pull-6 form-inline form-group">
+            <div class="form-group">
+              <div class="input-group">
+                <input id="pasteid" class="form-control" placeholder="paste ID">
+                <div class="input-group-btn">
+                  <button id="load" class="btn btn-default">Load</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        function getData(update) {
-          data = {
-            c: $("#text").val()
-          }
+          <div class="col-xs-12 col-sm-6 col-sm-pull-6 form-inline form-group">
+            <div class="form-group">
+              <div class="input-group">
+                <input id="uuid" class="form-control" placeholder="paste UUID">
+                <div class="input-group-btn">
+                  <button id="update" type="submit" class="btn btn-default">
+                    Update
+                    <span class="fa fa-spin fa-spinner hidden fa-spin fa-spinner hiddenner hidden"></span>
+                  </button>
+                </div>
+                <div class="input-group-btn">
+                  <button id="delete" type="submit" class="btn btn-default">
+                    Delete
+                    <span class="fa fa-spin fa-spinner hidden"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
 
-          if ($("#private").prop("checked")) {
-            data.p = 1;
-          }
-
-          if ($("#expire").val() > 0) {
-            data.s = $("#expire").val() * 3600;
-          }
-
-          return data;
-        }
-
-        function displayResponse(response) {
-          $("#paste_error").hide();
-          $("#paste_response").show();
-
-          $("#response_url").attr("href", response.url);
-          $("#response_url").text(response.url);
-          $("#response_status").text(response.status);
-          $("#response_uuid").text(response.uuid);
-
-          var id = $("#pasteid");
-          if (response.label) {
-            id.val(response.label);
-          } else if (response.short) {
-            id.val(response.short);
-          } else {
-            id.val(response.long);
-          }
-
-          if (response.uuid) {
-            $("#uuid").val(response.uuid);
-          }
-        }
-
-        function displayError(text) {
-          $("#paste_response").hide();
-          $("#paste_error").show();
-
-          $("#paste_error").text(text);
-        }
-
-        function submitForm(route) {
-          if (!route) {
-            return;
-          }
-          $.ajax({
-            url: "https://ptpb.pw" + route,
-            method: "POST",
-            data: getData(),
-            dataType: "json",
-            success: function(response) {
-              console.log(response);
-              displayResponse(response);
-            },
-            error: function(jqxhr) {
-              displayError(jqxhr.responseText);
-            }
-          });
-        }
-
-        function loadPaste(id) {
-          if (!id) {
-            return;
-          }
-
-          $.ajax({
-            url: "https://ptpb.pw/" + id,
-            success: function(data) {
-              $("#text").val(data);
-            },
-            fail: function(jqxhr) {
-              displayError(jqxhr.responseText);
-            }
-          });
-        }
-
-        function updatePaste(uuid) {
-          if (!uuid) {
-            return;
-          }
-
-          $.ajax({
-            url: "https://ptpb.pw/" + uuid,
-            method: "PUT",
-            data: getData(true),
-            dataType: "json",
-            success: function(response) {
-              console.log(response);
-              displayResponse(response);
-            },
-            fail: function(jqxhr) {
-              displayError(jqxhr.responseText);
-            }
-          });
-        }
-
-        function deletePaste(uuid) {
-          $.ajax({
-            url: "https://ptpb.pw/" + uuid,
-            method: "DELETE",
-            dataType: "json",
-            success: function(data) {
-              $("#clear").trigger("click");
-              displayResponse(data);
-            },
-            fail: function(jqxhr) {
-              displayError(jqxhr.responseText);
-            }
-          });
-        }
-
-        $("#paste").submit(function(e) {
-          var vanity = $("#vanity").val();
-
-          if (!$("#file").val()) {
-            e.preventDefault();
-
-            if (!$("#text").val()) {
-              alert("Enter text or select a file to paste!");
-              return;
-            }
-
-            if (vanity) {
-              submitForm("/~" + vanity);
-            } else {
-              submitForm("/");
-            }
-          } else if (vanity) {
-              $("#paste").attr("action", "https://ptpb.pw/~" + vanity);
-          }
-
-          $("#vanity").val("");
-        });
-
-        $("#shorten").click(function(e) {
-          e.preventDefault();
-          submitForm("/u");
-        });
-
-        $("#load").click(function(e) {
-          e.preventDefault();
-          loadPaste($("#pasteid").val());
-        });
-
-        $("#source").click(function(e) {
-          e.preventDefault();
-          var id = $("#pasteid");
-          id.val("~index");
-          loadPaste(id.val());
-        });
-
-        $("#update").click(function(e) {
-          e.preventDefault();
-          updatePaste($("#uuid").val());
-        });
-
-        $("#delete").click(function(e) {
-          e.preventDefault();
-          deletePaste($("#uuid").val());
-        });
-
-        $("#file_btn").click(function(e) {
-          e.preventDefault();
-          $("#file").trigger("click");
-        });
-
-        $("#file").change(function(e) {
-          $("#filename").text($(this).val());
-        });
-
-        $("#expire,#private").keypress(function(e) {
-          var code = e.keyCode || e.which;
-
-          if (code == 13) {
-            e.preventDefault();
-          }
-        });
-
-        $("#pasteid").keypress(function(e) {
-          var code = e.keyCode || e.which;
-
-          if (code == 13) {
-            e.preventDefault();
-
-            if ($(this).val()) {
-              loadPaste($(this).val());
-            } else {
-              alert("No ID!");
-            }
-          }
-        });
-
-        $("#uuid").keypress(function(e) {
-          var code = e.keyCode || e.which;
-
-          if (code == 13) {
-            e.preventDefault();
-
-            if ($(this).val()) {
-              updatePaste($(this).val());
-            } else {
-              alert("No UUID!");
-            }
-          }
-        });
-
-        $("#expire").on("input", function(e) {
-          var v = $(this).val();
-
-          if (v == 1) {
-            $("#hours").text("hour");
-          } else if (v == 0) {
-            $(this).val("");
-            $("#hours").text("hours");
-          } else {
-            $("#hours").text("hours");
-          }
-        });
-      });
-    </script>
-    <div id="footer" class="center">
-      <h6>Send all complaints to <a href="https://github.com/sudokode/pbwww" target="_blank">sudokode</a></h6>
+      <footer class="footer">
+        <div class="container">
+          <p class="text-muted text-center small">Send all complaints to <a href="https://github.com/sudokode/pbwww" target="_blank">sudokode</a></p>
+        </div>
+      </footer>
     </div>
   </body>
 </html>
