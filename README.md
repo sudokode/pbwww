@@ -8,4 +8,5 @@ Yes, the paste form for the paste site is a paste on the paste site. :)
 
 Contributors
 ------------
-Most UI stuff was done by [sector-f](https://github.com/sector-f).
+- [buhman](https://github.com/buhman) - app/UI
+- [sector-f](https://github.com/sector-f) - UI
