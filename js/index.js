@@ -244,6 +244,7 @@ $(function() {
         event.preventDefault();
         app.clear();
         event.target.blur();
+        $("#content").focus();
     });
 
     $('#file-input').change(function(event) {
