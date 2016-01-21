@@ -12,6 +12,7 @@ def main(index_html, index_js):
 
     with open(index_js) as f:
         script.text = f.read()
+        del script.attrib['src']
 
     sys.stdout.write(html.tostring(tree).decode('utf-8'))
 

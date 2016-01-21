@@ -16,7 +16,7 @@
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-    <script id="index"></script>
+    <script id="index" src="/js/index.js"></script>
   </head>
   <body>
     <div id="stash" class="hidden" aria-hidden="true">
@@ -35,12 +35,12 @@
           </div>
         </div>
 
-        <form id="paste-form">
+        <form id="paste-form" enctype="multipart/form-data" method="POST" action="/">
           <div id="alert-col" class="col-sm-12">
 
           </div>
           <div class="col-sm-12 form-group">
-            <textarea id="content" class="form-control" rows="20" cols="150" autofocus></textarea>
+            <textarea id="content" name="content" class="form-control" rows="20" cols="150" autofocus></textarea>
             <div id="filename" class="hidden well text-center"><h4></h4></div>
           </div>
 
@@ -53,13 +53,13 @@
             </div>
             <div class="form-group">
               <input type="file" id="file-input" class="sr-only">
-              <button id="file" type="submit" class="btn btn-default btn-block">
+              <button id="file" type="submit" class="btn btn-default btn-block" disabled="disabled">
                 Upload File
                 <span class="fa fa-spin fa-spinner hidden"></span>
               </button>
             </div>
             <div class="form-group">
-              <button id="shorturl" type="submit" class="btn btn-default btn-block">
+              <button id="shorturl" type="submit" class="btn btn-default btn-block" formaction="/u">
                 Short URL
                 <span class="fa fa-spin fa-spinner hidden"></span>
               </button>
@@ -70,32 +70,32 @@
             <div class="form-group">
               <div class="btn-group btn-block" data-toggle="buttons">
                 <label class="btn btn-default btn-block">
-                  <input id="private" class="api-input" type="checkbox"> Private
+                  <input id="private" name="private" class="api-input" type="checkbox" value="1"> Private
                 </label>
               </div>
             </div>
             <div class="form-group">
-              <button id="clear" type="input" class="btn btn-default btn-block">Clear</button>
+              <button id="clear" type="input" class="btn btn-default btn-block" disabled="disabled">Clear</button>
             </div>
           </div>
 
           <div class="col-xs-6 col-sm-6 col-sm-push-6 form-group">
             <div class="form-group">
               <label for="sunset" class="sr-only">Expires</label>
-              <input type="text" id="sunset" class="form-control api-input" placeholder="Expires">
+              <input type="text" id="sunset" name="sunset" class="form-control api-input" placeholder="Expires">
             </div>
             <div class="form-group">
               <label for="label" class="sr-only">Label</label>
-              <input type="text" id="label" class="form-control" placeholder="Label">
+              <input type="text" id="label" class="form-control" placeholder="Label" disabled="disabled">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-6 col-sm-pull-6 form-inline form-group">
             <div class="form-group">
               <div class="input-group">
-                <input id="pasteid" class="form-control" placeholder="paste ID">
+                <input id="pasteid" class="form-control" placeholder="paste ID" disabled="disabled">
                 <div class="input-group-btn">
-                  <button id="load" class="btn btn-default">Load</button>
+                  <button id="load" class="btn btn-default" disabled="disabled">Load</button>
                 </div>
               </div>
             </div>
@@ -104,15 +104,15 @@
           <div class="col-xs-12 col-sm-6 col-sm-pull-6 form-inline form-group">
             <div class="form-group">
               <div class="input-group">
-                <input id="uuid" class="form-control" placeholder="paste UUID">
+                <input id="uuid" class="form-control" placeholder="paste UUID" disabled="disabled">
                 <div class="input-group-btn">
-                  <button id="update" type="submit" class="btn btn-default">
+                  <button id="update" type="submit" class="btn btn-default" disabled="disabled">
                     Update
                     <span class="fa fa-spin fa-spinner hidden fa-spin fa-spinner hiddenner hidden"></span>
                   </button>
                 </div>
                 <div class="input-group-btn">
-                  <button id="delete" type="submit" class="btn btn-default">
+                  <button id="delete" type="submit" class="btn btn-default" disabled="disabled">
                     Delete
                     <span class="fa fa-spin fa-spinner hidden"></span>
                   </button>

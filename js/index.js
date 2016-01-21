@@ -118,7 +118,7 @@ var WWW = (function(undefined) {
         $('#content').removeClass('hidden');
         $('#filename').addClass('hidden');
 
-        $('#shorturl').prop('disabled', false);
+        $('input, button').prop('disabled', false);
     }
 
     function select_file() {
