@@ -4,8 +4,7 @@ var API = (function(baseurl) {
     function request(options) {
         options = options || {};
 
-        var url = baseurl.concat(options.uri || ''),
-            method = options.method;
+        var url = baseurl.concat(options.uri || '');
 
         args = $.extend({
             url: url,
@@ -29,6 +28,17 @@ var API = (function(baseurl) {
         });
 
         return fd;
+    }
+
+    function get(uri) {
+        return request({
+            method: 'GET',
+            uri: uri,
+            args: {
+                dataType: 'text',
+                accepts: "application/json, *.*",
+            }
+        });
     }
 
     function put(data, uri) {
@@ -76,7 +86,8 @@ var API = (function(baseurl) {
         paste: {
             post: post,
             put: put,
-            delete: paste_delete
+            delete: paste_delete,
+            get: get,
         },
         url: {
             post: url_post
@@ -106,6 +117,10 @@ var WWW = (function(undefined) {
         var strong = $('<strong>').text(title);
 
         return $('<div>').append(strong).append(': ').append(message);
+    }
+
+    function alert_simple(title, message) {
+        return alert;
     }
 
     function clear() {
@@ -200,6 +215,25 @@ var WWW = (function(undefined) {
         $('#uuid').val(uuid);
     }
 
+    function set_content(data, xhr) {
+
+        if (xhr.getResponseHeader('etag') == null) {
+            try {
+                api_status($.parseJSON(data));
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        var ct = xhr.getResponseHeader('content-type')
+        if (ct.startsWith("text/")) {
+            $('#content').val(data);
+            return;
+        } else {
+            alert_new().append(alert_title('status', 'cowardly refusing to display C-T: ' + ct));
+        }
+    }
+
     function url_data() {
 
         return {
@@ -214,7 +248,8 @@ var WWW = (function(undefined) {
         paste_data: paste_data,
         url_data: url_data,
         api_status: api_status,
-        set_uuid: set_uuid
+        set_uuid: set_uuid,
+        set_content: set_content
     };
 });
 
@@ -222,7 +257,6 @@ var WWW = (function(undefined) {
 $(function() {
 
     var api = API('https://ptpb.pw/');
-    //var api = API('http://localhost:10002/');
     var app = WWW();
 
     function paste_submit(spinner, cb, uri, content_only) {
@@ -277,7 +311,6 @@ $(function() {
         event.preventDefault();
 
         var spinner = $(this).find('.fa-spinner');
-        console.log(spinner);
         var label = $("#label").val();
 
         paste_submit(spinner, api.paste.post, label);
@@ -313,7 +346,26 @@ $(function() {
         event.target.blur();
     });
 
+    $('#load').click(function(event) {
+        event.preventDefault();
+
+        var spinner = $(this).find('.fa-spinner'),
+            id = $('#pasteid').val();
+
+        spinner.removeClass('hidden');
+        api.paste.get(id).done(function(data, status, xhr) {
+            app.set_content(data, xhr);
+            spinner.addClass('hidden');
+        });
+
+        event.target.blur();
+    });
+
+    $('#paste-form').submit(function(event) {
+        event.preventDefault();
+    });
+
     // refresh on firefox doesn't clear form values, but does clear
     // element state; whut
-    app.clear()
+    app.clear();
 });
