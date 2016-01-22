@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $("#shorturl").removeClass('hidden');
+  $("#shorturl").removeAttr('disabled');
   $("#file-input").addClass('sr-only');
 });
 
