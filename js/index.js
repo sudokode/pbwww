@@ -1,7 +1,3 @@
-$(document).ready(function() {
-  $("#file-input").addClass('hidden');
-});
-
 var API = (function(baseurl) {
 
     // method, args, uri
@@ -129,6 +125,7 @@ var WWW = (function(undefined) {
 
     function clear() {
 
+        $("#file-input").addClass('hidden');
         $('input').val('');
         $('textarea').val('');
         $(':checkbox').parent()
