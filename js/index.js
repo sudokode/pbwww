@@ -1,3 +1,8 @@
+$(document).ready(function() {
+  $("#shorturl").removeClass('hidden');
+  $("#file-input").addClass('sr-only');
+});
+
 var API = (function(baseurl) {
 
     // method, args, uri
