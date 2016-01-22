@@ -1,6 +1,5 @@
 $(document).ready(function() {
-  $("#shorturl").removeAttr('disabled');
-  $("#file-input").addClass('sr-only');
+  $("#file-input").addClass('hidden');
 });
 
 var API = (function(baseurl) {
