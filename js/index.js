@@ -105,22 +105,18 @@ var WWW = (function(undefined) {
 
         target.append(alert);
 
-        return alert;
-    }
-
-    function alert_title(title, message, link) {
-        if (link !== undefined)
-            message = $('<a>')
+        return { title: function (title, message, link) {
+            var title, strong;
+            if (link !== undefined)
+                message = $('<a>')
                 .attr('href', link)
                 .text(message);
 
-        var strong = $('<strong>').text(title);
+            strong = $('<strong>').text(title);
+            title = $('<div>').append(strong).append(': ').append(message);
 
-        return $('<div>').append(strong).append(': ').append(message);
-    }
-
-    function alert_simple(title, message) {
-        return alert;
+            return alert.append(title);
+        }}
     }
 
     function clear() {
@@ -197,10 +193,9 @@ var WWW = (function(undefined) {
                 return;
 
             if (key == 'status')
-                title = alert_title(key, value, data.url);
+                alert.title(key, value, data.url);
             else
-                title = alert_title(key, value);
-            alert.append(title);
+                alert.title(key, value);
         });
     }
 
@@ -229,7 +224,7 @@ var WWW = (function(undefined) {
             $('#content').val(data);
             return;
         } else {
-            alert_new().append(alert_title('status', 'cowardly refusing to display C-T: ' + ct));
+            alert_new().title('status', 'cowardly refusing to display C-T: ' + ct);
         }
     }
 
