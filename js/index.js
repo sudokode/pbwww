@@ -183,6 +183,9 @@ var WWW = (function(undefined) {
 
     function api_status(data) {
 
+        if (!Object.prototype.isPrototypeOf(data))
+            return;
+
         var alert = alert_new();
 
         $.each(status_keys, function(index, key) {
@@ -243,11 +246,12 @@ $(function() {
     var api = API('https://ptpb.pw/');
     var app = WWW();
 
-    function paste_submit(cb, uri, content_only) {
+    function paste_submit(event) {
+        var e = $(event.target),
+            fd = app.paste_data(),
+            fn = api.paste[e.data('method')];
 
-        var fd = app.paste_data(content_only);
-
-        return cb(fd, uri).done(function(data) {
+        return fn(fd, e.uri()).done(function(data) {
             app.set_uuid(data);
         });
     }
@@ -267,7 +271,6 @@ $(function() {
                 var spinner = $(event.target).find('.fa-spinner');
                 spinner.removeClass('hidden');
 
-                console.log('fn');
                 fn(event).always(function() {
                     spinner.addClass('hidden');
                 }).done(function(data) {
@@ -279,9 +282,16 @@ $(function() {
                     app.api_status(s);
                 });
             });
+        },
+        uri: function(value) {
+            uri = $(this).data('uri');
+            if (uri !== undefined) {
+                if (arguments.length != 0)
+                    return $(uri).val(value);
+                return $(uri).val();
+            }
         }
     });
-
 
     $('#clear').click(function(event) {
         app.clear();
@@ -299,37 +309,23 @@ $(function() {
     $('#shorturl').sclick(function(event) {
         var fd = app.url_data();
 
-        return api.url.post(fd)
+        return api.url.post(fd);
     });
 
-    $('#paste').sclick(function(event) {
-        var label = $("#label").val();
-
-        return paste_submit(api.paste.post, label);
-    });
-
-    $('#update').sclick(function(event) {
-        var uuid = $("#uuid").val();
-
-        return paste_submit(api.paste.put, uuid, true);
-    });
+    $('#paste').sclick(paste_submit);
+    $('#update').sclick(paste_submit);
 
     $('#delete').sclick(function(event) {
-        var uuid = $('#uuid');
-
-        return api.paste.delete(uuid.val()).done(function(data) {
-            uuid.val('');
+        var e = $(event.target)
+        return api.paste.delete(e.uri()).done(function(data) {
+            e.uri('');
         });
     });
 
-    $('#load').click(function(event) {
-        var spinner = $(this).find('.fa-spinner'),
-            id = $('#pasteid').val();
-
-        spinner.removeClass('hidden');
-        api.paste.get(id).done(function(data, status, xhr) {
+    $('#load').sclick(function(event) {
+        var e = $(event.target)
+        return api.paste.get(e.uri()).done(function(data, status, xhr) {
             app.set_content(data, xhr);
-            spinner.addClass('hidden');
         });
     });
 
