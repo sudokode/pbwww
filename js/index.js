@@ -211,18 +211,9 @@ var WWW = (function(undefined) {
 
     function set_content(data, xhr) {
 
-        if (xhr.getResponseHeader('etag') == null) {
-            try {
-                api_status($.parseJSON(data));
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
         var ct = xhr.getResponseHeader('content-type')
         if (ct.startsWith("text/")) {
             $('#content').val(data);
-            return;
         } else {
             alert_new().title('status', 'cowardly refusing to display C-T: ' + ct);
         }
