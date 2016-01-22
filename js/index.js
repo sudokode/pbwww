@@ -36,7 +36,9 @@ var API = (function(baseurl) {
             uri: uri,
             args: {
                 dataType: 'text',
-                accepts: "application/json, *.*",
+                accepts: {
+                    text: "application/json",
+                }
             }
         });
     }
@@ -266,6 +268,16 @@ $(function() {
         });
     }
 
+    function try_json(xhr) {
+        if (xhr.responseJSON !== undefined)
+            return xhr.responseJSON;
+        try {
+            return $.parseJSON(xhr.responseText);
+        } catch(err) {
+            return {}
+        }
+    }
+
     $.fn.extend({
         click: function(fn) {
             if (arguments.length == 0)
@@ -287,7 +299,7 @@ $(function() {
                 }).done(function(data) {
                     app.api_status(data);
                 }).fail(function(xhr, status, error) {
-                    var s = xhr.responseJSON || {};
+                    var s = try_json(xhr);
                     console.log(xhr);
                     s[status] = error;
                     app.api_status(s);
