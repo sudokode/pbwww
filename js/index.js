@@ -268,6 +268,8 @@ $(function() {
 
     $.fn.extend({
         click: function(fn) {
+            if (arguments.length == 0)
+                return $(this).trigger('click');
 	    $(this).on('click', function(event) {
                 event.preventDefault();
                 fn(event);
