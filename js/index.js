@@ -214,7 +214,7 @@ var WWW = (function(undefined) {
         $('#uuid').val(uuid);
     }
 
-    function set_content(data, xhr) {
+    function set_content(data, xhr, id) {
 
         if (xhr.getResponseHeader('etag') == null) {
             try {
@@ -228,6 +228,18 @@ var WWW = (function(undefined) {
         if (ct.startsWith("text/")) {
             $('#content').val(data);
             return;
+        } else if (ct.startsWith("image/")) {
+          var link = $('<a></a>')
+            .attr('href', 'https://ptpb.pw/' + id)
+            .attr('target', '_blank')
+            .attr('title', 'Opens in a new window');
+
+          var img = $('<img></img>')
+            .attr('src', 'https://ptpb.pw/' + id)
+            .attr('height', '10%')
+            .attr('width', '30%');
+
+          alert_new().append(alert_title('image loaded', $(link).append(img)));
         } else {
             alert_new().append(alert_title('status', 'cowardly refusing to display C-T: ' + ct));
         }
@@ -340,7 +352,7 @@ $(function() {
 
         spinner.removeClass('hidden');
         api.paste.get(id).done(function(data, status, xhr) {
-            app.set_content(data, xhr);
+            app.set_content(data, xhr, id);
             spinner.addClass('hidden');
         });
     });
