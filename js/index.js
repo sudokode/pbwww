@@ -183,10 +183,9 @@ var WWW = (function(undefined) {
         return fd;
     }
 
-    var status_keys = ['status', 'uuid', 'sunset'];
+    var status_keys = ['status', 'uuid', 'sunset', 'error'];
 
     function api_status(data) {
-        console.log(data)
 
         var alert = alert_new();
 
@@ -253,31 +252,51 @@ var WWW = (function(undefined) {
     };
 });
 
-
 $(function() {
 
     var api = API('https://ptpb.pw/');
     var app = WWW();
 
-    function paste_submit(spinner, cb, uri, content_only) {
-
-        spinner.removeClass('hidden');
+    function paste_submit(cb, uri, content_only) {
 
         var fd = app.paste_data(content_only);
 
-        xhr = cb(fd, uri).done(function(data) {
-            app.api_status(data);
+        return cb(fd, uri).done(function(data) {
             app.set_uuid(data);
-            spinner.addClass('hidden');
         });
-
-        return xhr;
     }
 
+    $.fn.extend({
+        click: function(fn) {
+	    $(this).on('click', function(event) {
+                event.preventDefault();
+                fn(event);
+                event.target.blur();
+            });
+        },
+        sclick: function(fn) {
+            $(this).click(function(event) {
+                var spinner = $(event.target).find('.fa-spinner');
+                spinner.removeClass('hidden');
+
+                console.log('fn');
+                fn(event).always(function() {
+                    spinner.addClass('hidden');
+                }).done(function(data) {
+                    app.api_status(data);
+                }).fail(function(xhr, status, error) {
+                    var s = xhr.responseJSON || {};
+                    console.log(xhr);
+                    s[status] = error;
+                    app.api_status(s);
+                });
+            });
+        }
+    });
+
+
     $('#clear').click(function(event) {
-        event.preventDefault();
         app.clear();
-        event.target.blur();
         $("#content").focus();
     });
 
@@ -286,69 +305,36 @@ $(function() {
     });
 
     $('#file').click(function(event) {
-        event.preventDefault();
         $('#file-input').click();
-        event.target.blur();
     });
 
-    $('#shorturl').click(function(event) {
-        event.preventDefault();
+    $('#shorturl').sclick(function(event) {
+        var fd = app.url_data();
 
-        var spinner = $(this).find('.fa-spinner'),
-            fd = app.url_data();
-
-        spinner.removeClass('hidden');
-        api.url.post(fd).done(function(data) {
-            app.api_status(data);
-            spinner.addClass('hidden');
-        });
-
-        event.target.blur();
+        return api.url.post(fd)
     });
 
-    $('#paste').click(function(event) {
-
-        event.preventDefault();
-
-        var spinner = $(this).find('.fa-spinner');
+    $('#paste').sclick(function(event) {
         var label = $("#label").val();
 
-        paste_submit(spinner, api.paste.post, label);
-
-        event.target.blur();
+        return paste_submit(api.paste.post, label);
     });
 
-    $('#update').click(function(event) {
+    $('#update').sclick(function(event) {
+        var uuid = $("#uuid").val();
 
-        event.preventDefault();
-
-        var spinner = $(this).find('.fa-spinner'),
-            uuid = $("#uuid").val();
-
-        paste_submit(spinner, api.paste.put, uuid, true);
-
-        event.target.blur();
+        return paste_submit(api.paste.put, uuid, true);
     });
 
-    $('#delete').click(function(event) {
-        event.preventDefault();
+    $('#delete').sclick(function(event) {
+        var uuid = $('#uuid');
 
-        var spinner = $(this).find('.fa-spinner'),
-            uuid = $('#uuid');
-
-        spinner.removeClass('hidden');
-        api.paste.delete(uuid.val()).done(function(data) {
-            app.api_status(data);
+        return api.paste.delete(uuid.val()).done(function(data) {
             uuid.val('');
-            spinner.addClass('hidden');
         });
-
-        event.target.blur();
     });
 
     $('#load').click(function(event) {
-        event.preventDefault();
-
         var spinner = $(this).find('.fa-spinner'),
             id = $('#pasteid').val();
 
@@ -357,8 +343,6 @@ $(function() {
             app.set_content(data, xhr);
             spinner.addClass('hidden');
         });
-
-        event.target.blur();
     });
 
     $('#paste-form').submit(function(event) {
