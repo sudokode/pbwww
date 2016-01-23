@@ -100,6 +100,22 @@ var API = (function(baseurl) {
 
 var WWW = (function(undefined) {
 
+    function init() {
+        $('#datetime').datetimepicker({
+            icons: {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-compass',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove'
+            },
+        });
+    }
+
     function alert_new() {
 
         var alert = $('#stash').find('.alert').clone();
@@ -131,7 +147,7 @@ var WWW = (function(undefined) {
         $('#content').removeClass('hidden');
         $('#filename').addClass('hidden');
 
-        $('input, button').prop('disabled', false);
+        $('input, button').not('.ignore-disable').prop('disabled', false);
     }
 
     function select_file() {
@@ -164,15 +180,15 @@ var WWW = (function(undefined) {
 
         $('.api-input:checkbox').each(function() {
             var value = + $(this).is(':checked'),
-                name = $(this).attr('id');
+                name = $(this).attr('name');
 
             if (value)
                 fd.append(name, value);
         })
 
-        $('.api-input:text').each(function() {
+        $('.api-input:text:enabled').each(function() {
             var value = $(this).val(),
-                name = $(this).attr('id');
+                name = $(this).attr('name');
 
             if (value)
                 fd.append(name, value);
@@ -231,6 +247,15 @@ var WWW = (function(undefined) {
         }
     }
 
+    function swap_sunset() {
+        var sunset = $('#sunset'),
+            hidden = sunset.find('input, span.fa'),
+            visible = hidden.not('.hidden');
+
+        hidden.removeClass('hidden').prop('disabled', false);
+        visible.addClass('hidden').prop('disabled', true);
+    }
+
     return {
         alert: alert,
         clear: clear,
@@ -239,7 +264,9 @@ var WWW = (function(undefined) {
         url_data: url_data,
         api_status: api_status,
         set_uuid: set_uuid,
-        set_content: set_content
+        set_content: set_content,
+        swap_sunset: swap_sunset,
+        init: init
     };
 });
 
@@ -357,6 +384,10 @@ $(function() {
     $('#paste-form').submit(function(event) {
         event.preventDefault();
     });
+
+    $('#swap').click(app.swap_sunset);
+
+    app.init();
 
     // refresh on firefox doesn't clear form values, but does clear
     // element state; whut
