@@ -268,6 +268,15 @@ $(function() {
         }
     }
 
+    var _xhr = $.ajaxSettings.xhr;
+    $.ajaxSettings.xhr = function() {
+        var res = _xhr();
+        res.upload.addEventListener('progress', function(event) {
+            $('.progress-bar').width(event.loaded / event.total * 100 + "%");
+        });
+        return res;
+    }
+
     $.fn.extend({
         click: function(fn) {
             if (arguments.length == 0)
@@ -280,11 +289,15 @@ $(function() {
         },
         sclick: function(fn) {
             $(this).click(function(event) {
-                var spinner = $(event.target).find('.fa-spinner');
+                var spinner = $(event.target).find('.fa-spinner'),
+                    progress = $('.progress');
                 spinner.removeClass('hidden');
+                progress.removeClass('hidden');
 
                 fn(event).always(function() {
                     spinner.addClass('hidden');
+                    progress.addClass('hidden');
+                    $('.progress-bar').width('0%');
                 }).done(function(data) {
                     app.api_status(data);
                 }).fail(function(xhr, status, error) {
