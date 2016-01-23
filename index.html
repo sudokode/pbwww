@@ -46,7 +46,7 @@
 
           <div class="col-xs-6 col-sm-6 form-inline form-group">
             <div class="form-group">
-              <button id="paste" type="submit" class="btn btn-primary btn-block ">
+              <button id="paste" type="submit" class="btn btn-primary btn-block" data-method="post">
                 Paste
                 <span class="fa fa-spin fa-spinner hidden"></span>
               </button>
@@ -95,7 +95,9 @@
               <div class="input-group">
                 <input id="pasteid" class="form-control" placeholder="paste ID" disabled="disabled">
                 <div class="input-group-btn">
-                  <button id="load" type="submit" class="btn btn-default" disabled="disabled">Load</button>
+                  <button id="load" type="submit" class="btn btn-default" data-uri="#pasteid" disabled="disabled">Load
+                    <span class="fa fa-spin fa-spinner hidden fa-spin fa-spinner hidden"></span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -106,13 +108,13 @@
               <div class="input-group">
                 <input id="uuid" class="form-control" placeholder="paste UUID" disabled="disabled">
                 <div class="input-group-btn">
-                  <button id="update" type="submit" class="btn btn-default" disabled="disabled">
+                  <button id="update" type="submit" class="btn btn-default" data-uri="#uuid" data-method="put" disabled="disabled">
                     Update
-                    <span class="fa fa-spin fa-spinner hidden fa-spin fa-spinner hiddenner hidden"></span>
+                    <span class="fa fa-spin fa-spinner hidden fa-spin fa-spinner hidden"></span>
                   </button>
                 </div>
                 <div class="input-group-btn">
-                  <button id="delete" type="submit" class="btn btn-default" disabled="disabled">
+                  <button id="delete" type="submit" class="btn btn-default" data-uri="#uuid" data-method="delete" disabled="disabled">
                     Delete
                     <span class="fa fa-spin fa-spinner hidden"></span>
                   </button>
