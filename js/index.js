@@ -134,9 +134,6 @@ var WWW = (function(undefined) {
         $('#filename').addClass('hidden');
 
         $('input, button').prop('disabled', false);
-        $('#private').parent()
-          .removeClass('form-control')
-          .addClass('btn btn-default btn-block');
     }
 
     function select_file() {
