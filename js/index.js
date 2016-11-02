@@ -139,6 +139,7 @@ var WWW = (function(undefined) {
 
     function clear() {
 
+        $("#file-input").addClass('hidden');
         $('input').val('');
         $('textarea').val('');
         $(':checkbox').parent()

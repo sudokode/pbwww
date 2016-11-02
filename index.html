@@ -56,17 +56,10 @@
             <div id="filename" class="hidden well text-center"><h4></h4></div>
           </div>
 
-          <div class="col-xs-6 col-sm-6 form-inline form-group">
+          <div class="col-xs-5 col-sm-5 form-inline form-group">
             <div class="form-group">
               <button id="paste" type="submit" class="btn btn-primary btn-block" data-method="post">
                 Paste
-                <span class="fa fa-spin fa-spinner hidden"></span>
-              </button>
-            </div>
-            <div class="form-group">
-              <input type="file" id="file-input" class="sr-only">
-              <button id="file" type="submit" class="btn btn-default btn-block" disabled="disabled">
-                Upload File
                 <span class="fa fa-spin fa-spinner hidden"></span>
               </button>
             </div>
@@ -76,9 +69,21 @@
                 <span class="fa fa-spin fa-spinner hidden"></span>
               </button>
             </div>
+            <div class="form-group">
+              <button id="file" type="submit" class="btn btn-default btn-block">
+                Upload File
+                <span class="fa fa-spin fa-spinner hidden"></span>
+              </button>
+            </div>
           </div>
 
-          <div class="col-xs-6 col-sm-6 form-inline form-group text-right">
+          <div class="col-xs-4 col-sm-4 col-sm-pull-1 form-inline form-group">
+            <div class="form-group">
+              <input type="file" id="file-input" name="content" class="form-control" style="padding-bottom: 0.5em">
+            </div>
+          </div>
+
+          <div class="col-xs-3 col-sm-3 form-inline form-group text-right">
             <div class="form-group">
               <div class="btn-group btn-block">
                 <input id="private" name="private" class="api-input hidden" type="checkbox" value="1">
@@ -90,7 +95,7 @@
             </div>
           </div>
 
-          <div class="col-xs-6 col-sm-6 col-sm-push-6 form-group">
+          <div class="col-xs-12 col-sm-6 col-sm-push-6 form-group">
             <div class="form-group">
               <label for="sunset" class="sr-only">Expires</label>
               <div class="input-group" id="sunset">
